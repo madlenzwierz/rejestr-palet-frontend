@@ -53,7 +53,13 @@ button.active{background:#111}
 .gut{background:#e0e0e0;color:#000}
 
 /* APP */
-.app-container{max-width:480px;margin:0 auto;padding-bottom:40px}
+.app-container{
+  max-width:480px;
+  margin:0 auto;
+  padding-bottom:40px;
+  display:flex;
+  flex-direction:column;
+}
 
 /* SCAN */
 .scan-buttons{
@@ -285,6 +291,27 @@ button:hover{
 input, select{
   border-radius:10px;
   border:1px solid #bbb;
+}
+
+@media (max-width: 600px){
+
+  .app-container{
+    padding-top: 0px;
+  }
+
+  .scan-buttons{
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .camera-wrapper{
+    margin-top: 10px;
+  }
+
+  body{
+    padding-top: 5px;
+  }
+
 }
 
 </style>
