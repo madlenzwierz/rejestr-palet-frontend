@@ -56,9 +56,13 @@ button.active{background:#111}
 .app-container{
   max-width:480px;
   margin:0 auto;
+<<<<<<< HEAD
   padding-bottom:40px;
   display:flex;
   flex-direction:column;
+=======
+  padding:10px 12px 40px 12px;
+>>>>>>> main
 }
 
 /* SCAN */
@@ -75,24 +79,35 @@ button.active{background:#111}
 .camera-wrapper{
   width:100%;
   max-width:420px;
+<<<<<<< HEAD
   height:60vw;              /* wysokość zależna od szerokości ekranu */
   max-height:420px;         /* limit na dużych ekranach */
+=======
+>>>>>>> main
   margin:15px auto;
   border:2px solid #aaa;
   border-radius:12px;
   overflow:hidden;
+<<<<<<< HEAD
   background:#000;
 }
 
 #qr-reader{
   width:100%;
   height:100%;
+=======
+  background:#fff;
+>>>>>>> main
 }
 
 #qr-reader video{
   width:100%!important;
   height:100%!important;
+<<<<<<< HEAD
   object-fit:cover;
+=======
+  object-fit:cover;  /* 🔥 bez przycinania */
+>>>>>>> main
 }
 
 .scan-info div{margin:6px 0;font-weight:bold}
@@ -295,6 +310,7 @@ input, select{
 
 @media (max-width: 600px){
 
+<<<<<<< HEAD
   .app-container{
     padding-top: 0px;
   }
@@ -310,6 +326,23 @@ input, select{
 
   body{
     padding-top: 5px;
+=======
+  #app{
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+  }
+
+  .scan-buttons{
+    margin-top: 5px;
+    margin-bottom: 8px;
+  }
+
+  .camera-wrapper{
+    height:65vw;
+    max-height:70vh;
+    margin:10px auto;
+>>>>>>> main
   }
 
 }
