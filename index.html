@@ -522,6 +522,50 @@ input, select{
   </div>
 </div>
 
+<!-- 🖨 PANEL DRUKARZA -->
+<div 
+  id="print-panel"
+  style="
+    max-width:480px;
+    margin:16px auto;
+    display:none;
+    padding:18px;
+    background:#fff8dc;
+    border-radius:14px;
+  "
+>
+  <h3>📦 Panel druku</h3>
+
+  <input
+    id="printOrderInput"
+    placeholder="Numer składki (np. 25/4444-1)"
+    style="margin-bottom:12px"
+  >
+
+  <div style="display:flex; gap:12px; margin-bottom:12px">
+    <button 
+      style="flex:1;background:#27ae60"
+      onclick="createPrintPallet()"
+    >
+      ➕ Utwórz nową paletę
+    </button>
+
+    <button 
+      style="flex:1;background:#2980b9"
+      onclick="addToCurrentPrintPallet()"
+    >
+      ➕ Dodaj do obecnej
+    </button>
+  </div>
+
+  <div 
+    id="current-print-pallet"
+    style="font-weight:bold"
+  >
+    Obecna paleta: –
+  </div>
+</div>
+
 <div id="app" style="display:none">
 <button onclick="goBack()" style="margin-bottom:12px">← Powrót</button>
 
@@ -923,6 +967,13 @@ function startApp(location){
   }
 
   currentLocation = location;
+
+  // 🔥 POKAŻ PANEL DRUKU TYLKO DLA DRUKARZA W DRUKARSKIEJ
+  if(location === "DRUKARSKA" && currentUser.role === "drukarz"){
+    document.getElementById("print-panel").style.display = "block";
+  }else{
+    document.getElementById("print-panel").style.display = "none";
+  }
 
   // pokaż panel procesu dopiero po wejściu do lokalizacji
   document.getElementById("process-wrapper").style.display = "block";
@@ -1947,6 +1998,94 @@ async function changeUserRole(userId, role){
     alert("✅ Rola zmieniona");
   }catch(e){
     alert("❌ Błąd połączenia");
+  }
+}
+
+async function createPrintPallet(){
+
+  const order = document.getElementById("printOrderInput").value.trim();
+
+  if(!order){
+    alert("Podaj numer składki");
+    return;
+  }
+
+  try{
+    const res = await fetch(
+      API_URL + "/api/print/create_pallet",
+      {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({
+          order_id: order,
+          user_id: currentUser.id
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    if(!res.ok){
+      alert(data.error || "Błąd");
+      return;
+    }
+
+    document.getElementById("current-print-pallet").textContent =
+      "Obecna paleta: " + data.new_pallet;
+
+    alert("✅ Utworzono: " + data.new_pallet);
+
+    await loadHistory();
+    rebuildHighlightsForCurrentLocation();
+    renderGrid();
+
+  }catch(e){
+    alert("Błąd połączenia");
+  }
+}
+
+
+async function addToCurrentPrintPallet(){
+
+  const order = document.getElementById("printOrderInput").value.trim();
+
+  if(!order){
+    alert("Podaj numer składki");
+    return;
+  }
+
+  try{
+    const res = await fetch(
+      API_URL + "/api/print/add_to_current_pallet",
+      {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({
+          order_id: order,
+          user_id: currentUser.id
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    if(!res.ok){
+      alert(data.error || "Błąd");
+      return;
+    }
+
+    document.getElementById("current-print-pallet").textContent =
+      "Obecna paleta: " + data.added_to_pallet.split("-").slice(0,-1).join("-") +
+      "-P" + data.added_to_pallet.split("-P")[1];
+
+    alert("✅ Dodano: " + data.added_to_pallet);
+
+    await loadHistory();
+    rebuildHighlightsForCurrentLocation();
+    renderGrid();
+
+  }catch(e){
+    alert("Błąd połączenia");
   }
 }
 
